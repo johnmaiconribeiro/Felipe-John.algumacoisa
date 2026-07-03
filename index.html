@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoséTube - Assista, Publique e Monetize</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <button id="menu-btn" class="menu-btn">☰</button>
+            <div class="logo">
+                <span class="logo-pink">R</span><span class="logo-purple">osé</span><span class="logo-text">Tube</span>
+            </div>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Buscar vídeos...">
+            <button id="search-btn">🔍</button>
+        </div>
+
+        <div class="header-right">
+            <button id="upload-btn" class="header-btn">📤 Publicar</button>
+            <button id="premium-btn" class="header-btn premium-btn">⭐ Premium</button>
+            <div class="user-avatar">👤</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <nav>
+                <a href="#" class="sidebar-item active"><span>🏠</span> Início</a>
+                <a href="#" class="sidebar-item"><span>🔥</span> Em Alta</a>
+                <a href="#" class="sidebar-item"><span>📚</span> Inscrições</a>
+                <hr>
+                <a href="#" class="sidebar-item"><span>🎥</span> Sua Biblioteca</a>
+                <a href="#" class="sidebar-item"><span>🕒</span> Histórico</a>
+                <a href="#" class="sidebar-item"><span>❤️</span> Vídeos Curtidos</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content">
+            <div class="category-bar">
+                <button class="category-chip active">Todos</button>
+                <button class="category-chip">Música</button>
+                <button class="category-chip">Games</button>
+                <button class="category-chip">Vlogs</button>
+                <button class="category-chip">Tech</button>
+                <button class="category-chip">Comédia</button>
+            </div>
+
+            <!-- VIDEO GRID -->
+            <div class="video-grid" id="video-grid">
+                <!-- Populados via JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- VIDEO PLAYER MODAL -->
+    <div id="video-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-modal">✕</button>
+            <div class="video-player">
+                <video id="main-video" controls>
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                </video>
+                <div class="video-info">
+                    <h2 id="modal-title">Título do Vídeo</h2>
+                    <p id="modal-channel">Canal • 1M visualizações</p>
+                    <div class="quality-options">
+                        <button class="quality-btn" data-quality="1080">1080p</button>
+                        <button class="quality-btn premium-quality" data-quality="4k">4K <span class="premium-badge">PREMIUM</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPLOAD MODAL -->
+    <div id="upload-modal" class="modal hidden">
+        <div class="modal-content upload-modal">
+            <h2>Publicar Vídeo</h2>
+            <input type="text" id="upload-title" placeholder="Título do vídeo" class="upload-input">
+            <textarea id="upload-desc" placeholder="Descrição"></textarea>
+            <input type="file" id="video-file" accept="video/*">
+            <button id="publish-btn">Publicar Agora</button>
+            <button class="close-modal">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- PREMIUM MODAL -->
+    <div id="premium-modal" class="modal hidden">
+        <div class="modal-content premium-modal">
+            <div class="premium-header">
+                <h1>⭐ RoséTube Premium</h1>
+                <p class="premium-subtitle">Desbloqueie 4K, sem anúncios e mais</p>
+            </div>
+            
+            <div class="premium-options">
+                <div class="premium-card" id="ad-premium">
+                    <h3>30 Minutos Grátis</h3>
+                    <p>Assista um anúncio e ganhe 30 minutos de Premium</p>
+                    <button id="watch-ad-btn">Ver Anúncio (30 min)</button>
+                </div>
+                
+                <div class="premium-card premium-card-highlight">
+                    <h3>Premium Vitalício</h3>
+                    <p class="price">R$ 5,99<span>/única vez</span></p>
+                    <button id="buy-premium-btn">Comprar Agora</button>
+                </div>
+            </div>
+            
+            <div class="current-status" id="premium-status">
+                Status: <span class="free">Grátis</span>
+            </div>
+            
+            <button class="close-modal">Fechar</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="premium.js"></script>
+</body>
+</html>
