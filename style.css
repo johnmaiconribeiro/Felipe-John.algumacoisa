@@ -41,8 +41,14 @@ body {
 
 .logo-text {
     background: linear-gradient(90deg, var(--pink), var(--purple));
+    
+    /* Compatibilidade completa para background-clip */
     -webkit-background-clip: text;
+    background-clip: text;
+    
+    /* Compatibilidade completa para text-fill-color */
     -webkit-text-fill-color: transparent;
+    color: transparent;
 }
 
 .search-container {
