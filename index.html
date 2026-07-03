@@ -3,126 +3,623 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rosytube - Assista, Publique e Monetize</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>RoxoTube - Assista, Crie e Monetize</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        
+        :root {
+            --rosa: #ff00aa;
+            --roxo: #8b00ff;
+        }
+        
+        body {
+            font-family: 'Roboto', system-ui, sans-serif;
+            background-color: #0a0a0a;
+            color: #f0f0f0;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #1a0033, #330033);
+            border-bottom: 3px solid var(--rosa);
+        }
+        
+        .sidebar {
+            background: #1a0033;
+            border-right: 2px solid var(--roxo);
+        }
+        
+        .video-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 25px -5px rgb(139 0 255 / 0.3), 0 8px 10px -6px rgb(255 0 170 / 0.3);
+        }
+        
+        .premium-badge {
+            background: linear-gradient(45deg, #ff00aa, #8b00ff);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        
+        .player-container {
+            background: #000;
+        }
+        
+        .nav-link {
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background-color: #330033;
+            color: var(--rosa);
+            transform: translateX(8px);
+        }
+        
+        .fake-video {
+            background: linear-gradient(45deg, #4b0082, #c71585);
+        }
+    </style>
 </head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <span class="logo-text">🌸 Rosytube</span>
-        </div>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Buscar vídeos...">
-            <button id="search-btn">🔍</button>
-        </div>
-        <div class="header-icons">
-            <button id="upload-btn" class="icon-btn">📤</button>
-            <button id="premium-btn" class="icon-btn">⭐ Premium</button>
-            <button class="icon-btn">🛎️</button>
-            <div class="profile">
-                <img src="https://via.placeholder.com/32" alt="Perfil" class="profile-img">
+<body class="min-h-screen">
+    <!-- HEADER -->
+    <header class="header fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3 max-w-screen-2xl mx-auto">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-play text-4xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500"></i>
+                <div>
+                    <span class="text-3xl font-bold tracking-tighter" style="color: #ff00aa;">ROXO</span>
+                    <span class="text-3xl font-bold tracking-tighter text-white">TUBE</span>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="flex-1 max-w-2xl mx-8">
+                <div class="relative">
+                    <input type="text" id="search-input"
+                           class="w-full bg-zinc-900 border border-purple-500 focus:border-pink-500 rounded-full py-3 px-6 text-white placeholder:text-zinc-400 focus:outline-none"
+                           placeholder="Buscar vídeos, criadores ou #tags...">
+                    <button onclick="searchVideos()" 
+                            class="absolute right-3 top-1/2 -translate-y-1/2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-2 rounded-full hover:brightness-110 transition">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6 text-xl">
+                <!-- Upload -->
+                <button onclick="showUploadModal()" 
+                        class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-5 py-2 rounded-full border border-purple-400 hover:border-pink-400 transition">
+                    <i class="fa-solid fa-upload"></i>
+                    <span class="hidden md:inline font-medium">Publicar</span>
+                </button>
+
+                <!-- Premium -->
+                <button onclick="showPremiumModal()" 
+                        class="premium-badge flex items-center gap-3 px-6 py-2 rounded-2xl text-white font-bold shadow-lg">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>PREMIUM</span>
+                </button>
+
+                <!-- Avatar -->
+                <div onclick="toggleUserMenu()" class="w-9 h-9 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center cursor-pointer ring-2 ring-offset-2 ring-offset-zinc-950 ring-purple-400">
+                    <i class="fa-solid fa-user text-white"></i>
+                </div>
             </div>
         </div>
     </header>
 
-    <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <nav>
-                <a href="#" class="nav-item active">🏠 Início</a>
-                <a href="#" class="nav-item">🔥 Em Alta</a>
-                <a href="#" class="nav-item">📺 Inscrições</a>
-                <a href="#" class="nav-item">📚 Biblioteca</a>
-                <a href="#" class="nav-item">❤️ Histórico</a>
-                <hr>
-                <a href="#" class="nav-item" id="my-videos">🎥 Meus Vídeos</a>
-                <a href="#" class="nav-item" id="monetization">💰 Monetização</a>
-                <div class="premium-section">
-                    <h3>Premium</h3>
-                    <div id="premium-status" class="premium-status">Grátis • 0 min restantes</div>
-                </div>
+    <div class="flex pt-16">
+        <!-- SIDEBAR -->
+        <div class="sidebar w-64 fixed h-screen overflow-y-auto hidden lg:block pt-4">
+            <nav class="px-3">
+                <a href="#" onclick="navigateTo('home')" class="nav-link flex items-center gap-5 px-6 py-3 rounded-2xl text-white mb-1">
+                    <i class="fa-solid fa-house w-6"></i>
+                    <span class="font-medium">Início</span>
+                </a>
+                <a href="#" onclick="navigateTo('trending')" class="nav-link flex items-center gap-5 px-6 py-3 rounded-2xl text-white mb-1">
+                    <i class="fa-solid fa-fire w-6"></i>
+                    <span class="font-medium">Em Alta</span>
+                </a>
+                <a href="#" class="nav-link flex items-center gap-5 px-6 py-3 rounded-2xl text-white mb-1">
+                    <i class="fa-solid fa-compass w-6"></i>
+                    <span class="font-medium">Explorar</span>
+                </a>
+                <a href="#" class="nav-link flex items-center gap-5 px-6 py-3 rounded-2xl text-white mb-1">
+                    <i class="fa-solid fa-users w-6"></i>
+                    <span class="font-medium">Inscrições</span>
+                </a>
+                
+                <div class="h-px bg-purple-900 my-6 mx-6"></div>
+                
+                <div class="px-6 text-xs uppercase tracking-widest text-purple-300 mb-3">Biblioteca</div>
+                <a href="#" class="nav-link flex items-center gap-5 px-6 py-3 rounded-2xl text-white mb-1">
+                    <i class="fa-solid fa-clock w-6"></i>
+                    <span class="font-medium">Histórico</span>
+                </a>
+                <a href="#" class="nav-link flex items-center gap-5 px-6 py-3 rounded-2xl text-white mb-1">
+                    <i class="fa-solid fa-thumbs-up w-6"></i>
+                    <span class="font-medium">Curtidos</span>
+                </a>
+                <a href="#" onclick="showMyVideos()" class="nav-link flex items-center gap-5 px-6 py-3 rounded-2xl text-white mb-1">
+                    <i class="fa-solid fa-video w-6"></i>
+                    <span class="font-medium">Meus Vídeos</span>
+                </a>
+                
+                <div class="h-px bg-purple-900 my-6 mx-6"></div>
+                
+                <button onclick="showPremiumModal()" 
+                        class="w-full mx-4 bg-gradient-to-r from-pink-500 to-purple-600 py-4 rounded-3xl font-bold text-lg flex items-center justify-center gap-3 hover:scale-105 transition">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>Obter Premium</span>
+                </button>
             </nav>
-        </aside>
+        </div>
 
-        <!-- Main Content -->
-        <main class="content">
-            <div class="categories">
-                <button class="category-btn active">Todos</button>
-                <button class="category-btn">Música</button>
-                <button class="category-btn">Jogos</button>
-                <button class="category-btn">Vlogs</button>
-                <button class="category-btn">Tech</button>
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 lg:ml-64 p-8 max-w-screen-2xl mx-auto">
+            <!-- BANNER PREMIUM -->
+            <div class="mb-10 bg-gradient-to-r from-purple-900 via-pink-900 to-purple-900 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 text-[180px] opacity-10 font-black">PREMIUM</div>
+                
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-4 py-1 bg-white/20 text-white text-sm rounded-full font-medium">4K • 60FPS • Sem Anúncios</span>
+                    </div>
+                    <h1 class="text-5xl font-bold mb-3">Desbloqueie o RoxoTube Premium</h1>
+                    <p class="text-xl text-purple-100">Assista em 4K, ganhe mais monetização e remova todos os anúncios por 30 minutos assistindo um anúncio ou pague R$ 5,99 uma única vez.</p>
+                    
+                    <div class="flex gap-4 mt-8">
+                        <button onclick="watchAdForPremium()" 
+                                class="bg-white text-black px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-purple-100 transition">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Assistir anúncio (30 min Premium)</span>
+                        </button>
+                        <button onclick="subscribeForever()" 
+                                class="bg-gradient-to-r from-amber-400 to-yellow-400 text-black px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:brightness-110 transition">
+                            <i class="fa-solid fa-crown"></i>
+                            <span>R$ 5,99 Vitalício</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hidden md:block w-80 h-48 bg-black rounded-2xl overflow-hidden relative">
+                    <div class="fake-video w-full h-full flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fa-solid fa-4k text-8xl text-white/70"></i>
+                            <p class="text-white font-bold mt-4">4K ULTRA HD</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="video-grid" id="video-grid">
-                <!-- Vídeos serão adicionados via JS -->
+            <!-- CATEGORIAS -->
+            <div class="flex gap-3 mb-8 overflow-x-auto pb-3">
+                <button onclick="filterCategory(this)" class="category-chip active px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-full whitespace-nowrap">Todos</button>
+                <button onclick="filterCategory(this)" class="category-chip px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-full whitespace-nowrap">Música</button>
+                <button onclick="filterCategory(this)" class="category-chip px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-full whitespace-nowrap">Games</button>
+                <button onclick="filterCategory(this)" class="category-chip px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-full whitespace-nowrap">Vlogs</button>
+                <button onclick="filterCategory(this)" class="category-chip px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-full whitespace-nowrap">Tech</button>
+                <button onclick="filterCategory(this)" class="category-chip px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-full whitespace-nowrap">ASMR Roxo</button>
+                <button onclick="filterCategory(this)" class="category-chip px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-full whitespace-nowrap">4K Premium</button>
+            </div>
+
+            <!-- VIDEOS GRID -->
+            <div id="videos-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                <!-- Vídeos serão gerados pelo JS -->
             </div>
         </main>
     </div>
 
-    <!-- Video Player Modal -->
-    <div id="video-modal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-player">✕</button>
-            <div class="player-container">
-                <video id="main-player" controls width="100%" height="auto">
-                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                </video>
-                <div class="video-info">
-                    <h2 id="video-title">Título do Vídeo</h2>
-                    <div class="video-meta">
-                        <span id="video-channel">Canal Exemplo</span>
-                        <button id="like-btn">👍 12K</button>
+    <!-- VIDEO PLAYER MODAL -->
+    <div id="video-modal" class="hidden fixed inset-0 bg-black/95 z-[100] flex items-center justify-center">
+        <div class="max-w-6xl w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modal-video-title" class="text-2xl font-bold">Título do Vídeo</h2>
+                <button onclick="closeVideoModal()" class="text-4xl text-white/70 hover:text-white">×</button>
+            </div>
+            
+            <div class="player-container aspect-video rounded-3xl overflow-hidden relative">
+                <!-- Fake player -->
+                <div id="fake-player" class="w-full h-full bg-gradient-to-br from-purple-950 to-pink-950 flex flex-col items-center justify-center">
+                    <div class="text-center">
+                        <i onclick="playFakeVideo()" class="fa-solid fa-play-circle text-9xl text-white/80 hover:text-white cursor-pointer transition"></i>
+                        <p class="mt-8 text-xl text-white/70">Vídeo em 4K (Premium)</p>
+                        <p id="premium-status" class="text-pink-400 font-medium">🔓 Premium Ativo por 30 minutos</p>
                     </div>
-                    <p id="video-desc">Descrição do vídeo...</p>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Premium Modal -->
-    <div id="premium-modal" class="modal">
-        <div class="modal-content premium-modal">
-            <button class="close-modal" id="close-premium">✕</button>
-            <h2>🌟 Rosytube Premium</h2>
-            <p class="premium-subtitle">Desbloqueie 4K, sem anúncios e mais!</p>
-            
-            <div class="premium-options">
-                <div class="option-card" id="ad-option">
-                    <h3>Assistir Anúncio</h3>
-                    <p>Ganhe <strong>30 minutos</strong> de Premium</p>
-                    <button class="btn-primary">Ver Anúncio (30s)</button>
-                </div>
-                <div class="option-card">
-                    <h3>Premium Ilimitado</h3>
-                    <p><strong>R$ 5,99</strong> / para sempre</p>
-                    <button class="btn-primary" id="pay-btn">Assinar Agora</button>
+                
+                <!-- Controls -->
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 hidden md:flex items-center justify-between">
+                    <div class="flex gap-6 text-white/80">
+                        <i class="fa-solid fa-backward"></i>
+                        <i onclick="playFakeVideo()" class="fa-solid fa-play"></i>
+                        <i class="fa-solid fa-forward"></i>
+                    </div>
+                    <div class="flex-1 mx-8 h-1 bg-white/30 rounded-full relative">
+                        <div class="absolute left-0 top-0 h-1 bg-gradient-to-r from-pink-500 to-purple-500 w-3/4 rounded-full"></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs">12:45</span>
+                        <span class="text-xs text-white/40">/ 28:19</span>
+                    </div>
                 </div>
             </div>
             
-            <div id="premium-result" class="premium-result hidden">
-                <h3>🎉 Parabéns!</h3>
-                <p id="premium-msg"></p>
+            <!-- Video info -->
+            <div class="flex justify-between mt-6 text-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-600 rounded-full"></div>
+                    <div>
+                        <div class="font-bold">@criadora_roxa</div>
+                        <div class="text-purple-300">2,4M inscritos</div>
+                    </div>
+                    <button onclick="subscribeChannel()" 
+                            class="ml-8 bg-white text-black px-8 py-2 rounded-full font-bold hover:bg-purple-200">Inscrever-se</button>
+                </div>
+                
+                <div class="flex gap-8 text-xl">
+                    <button onclick="likeVideo()" class="flex items-center gap-2 hover:text-pink-400 transition"><i class="fa-solid fa-thumbs-up"></i> 124K</button>
+                    <button class="flex items-center gap-2 hover:text-pink-400 transition"><i class="fa-solid fa-thumbs-down"></i></button>
+                    <button class="flex items-center gap-2 hover:text-pink-400 transition"><i class="fa-solid fa-share"></i> Compartilhar</button>
+                    <button onclick="showMonetizationInfo()" class="flex items-center gap-2 hover:text-pink-400 transition"><i class="fa-solid fa-dollar-sign"></i> Monetizar</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Upload Modal -->
-    <div id="upload-modal" class="modal">
-        <div class="modal-content upload-modal">
-            <button class="close-modal" id="close-upload">✕</button>
-            <h2>📤 Publicar Vídeo</h2>
-            <form id="upload-form">
-                <input type="text" id="video-title-input" placeholder="Título do vídeo" required>
-                <textarea id="video-desc-input" placeholder="Descrição"></textarea>
-                <input type="file" id="video-file" accept="video/*" required>
-                <button type="submit" class="btn-primary">Publicar Vídeo</button>
-            </form>
-            <div id="upload-status" class="hidden">Publicando... (Simulação)</div>
+    <!-- PREMIUM MODAL -->
+    <div id="premium-modal" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center">
+        <div class="bg-zinc-900 border border-purple-500 rounded-3xl max-w-md w-full mx-4 overflow-hidden">
+            <div class="p-8 text-center">
+                <div class="text-7xl mb-6">👑</div>
+                <h2 class="text-4xl font-bold mb-2">RoxoTube Premium</h2>
+                <p class="text-purple-300">Qualidade 4K • Sem anúncios • Mais alcance na monetização</p>
+                
+                <div class="my-10 space-y-4">
+                    <div onclick="watchAdForPremium()" class="cursor-pointer bg-zinc-800 hover:bg-zinc-700 p-6 rounded-2xl flex justify-between items-center border border-dashed border-purple-400">
+                        <div>
+                            <div class="font-bold text-xl">30 Minutos Grátis</div>
+                            <div class="text-sm text-purple-300">Assistindo 1 anúncio</div>
+                        </div>
+                        <div class="text-3xl">▶️</div>
+                    </div>
+                    
+                    <div onclick="subscribeForever()" class="cursor-pointer bg-gradient-to-r from-amber-400 to-yellow-400 text-black p-6 rounded-2xl flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-2xl">Premium Vitalício</div>
+                            <div class="font-mono text-xl">R$ 5,99</div>
+                        </div>
+                        <div class="text-4xl">♾️</div>
+                    </div>
+                </div>
+                
+                <button onclick="closePremiumModal()" 
+                        class="w-full py-4 text-zinc-400 hover:text-white transition">Fechar</button>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- UPLOAD MODAL -->
+    <div id="upload-modal" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center">
+        <div class="bg-zinc-900 border border-pink-500 rounded-3xl max-w-lg w-full mx-4">
+            <div class="p-8">
+                <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-upload"></i> Publicar Vídeo
+                </h2>
+                
+                <div class="border-2 border-dashed border-purple-400 rounded-2xl p-12 text-center mb-6 cursor-pointer hover:border-pink-400 transition" onclick="fakeUpload()">
+                    <i class="fa-solid fa-cloud-arrow-up text-6xl text-purple-400 mb-4"></i>
+                    <p class="font-medium">Arraste seu vídeo aqui ou clique para selecionar</p>
+                    <p class="text-xs text-zinc-400 mt-2">MP4 • Até 4K • 30 minutos</p>
+                </div>
+                
+                <input id="video-title" type="text" class="w-full bg-zinc-800 border border-purple-500 rounded-2xl px-6 py-4 mb-4" placeholder="Título do vídeo">
+                
+                <textarea id="video-desc" class="w-full bg-zinc-800 border border-purple-500 rounded-2xl px-6 py-4 h-24" placeholder="Descrição..."></textarea>
+                
+                <div class="flex gap-4 mt-8">
+                    <button onclick="closeUploadModal()" 
+                            class="flex-1 py-4 border border-zinc-600 rounded-2xl">Cancelar</button>
+                    <button onclick="publishVideo()" 
+                            class="flex-1 py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl font-bold">Publicar Agora</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+        <span id="toast-text"></span>
+    </div>
+
+    <script>
+        // Tailwind script already loaded
+        
+        let isPremium = false;
+        let premiumTimeLeft = 0;
+        
+        const videos = [
+            {
+                id: 1,
+                title: "ASMR Roxo: 1 Hora de Sons Relaxantes em 4K",
+                thumbnail: "https://picsum.photos/id/1015/320/180",
+                channel: "ASMR Roxo",
+                views: "1.2M",
+                time: "8 horas",
+                duration: "1:02:19"
+            },
+            {
+                id: 2,
+                title: "Review do Novo iPhone 17 em 4K Ultra HD",
+                thumbnail: "https://picsum.photos/id/201/320/180",
+                channel: "Tech Roxa",
+                views: "892K",
+                time: "2 dias",
+                duration: "18:45"
+            },
+            {
+                id: 3,
+                title: "Minecraft mas tudo é Rosa e Roxo",
+                thumbnail: "https://picsum.photos/id/237/320/180",
+                channel: "PixelDreams",
+                views: "3.4M",
+                time: "12 horas",
+                duration: "22:10"
+            },
+            {
+                id: 4,
+                title: "Maquiagem Completa Tema Roxo Glow",
+                thumbnail: "https://picsum.photos/id/1005/320/180",
+                channel: "BeautyVibes",
+                views: "456K",
+                time: "1 dia",
+                duration: "14:33"
+            },
+            {
+                id: 5,
+                title: "Top 10 Melhores Jogos de 2026 (4K)",
+                thumbnail: "https://picsum.photos/id/133/320/180",
+                channel: "GameX",
+                views: "2.1M",
+                time: "3 dias",
+                duration: "31:20"
+            },
+            {
+                id: 6,
+                title: "Vlog: Meu Dia em Tokyo com Filtro Roxo",
+                thumbnail: "https://picsum.photos/id/201/320/180",
+                channel: "TravelRoxo",
+                views: "784K",
+                time: "5 horas",
+                duration: "25:11"
+            }
+        ];
+        
+        function createVideoCard(video) {
+            const card = document.createElement('div');
+            card.className = 'video-card bg-zinc-900 rounded-3xl overflow-hidden cursor-pointer';
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${video.thumbnail}" class="w-full aspect-video object-cover">
+                    <div class="absolute bottom-2 right-2 bg-black/80 text-xs px-2 py-1 rounded font-mono">${video.duration}</div>
+                    ${Math.random() > 0.7 ? `<div class="premium-badge absolute top-3 left-3 text-[10px] px-3 py-1 rounded-full text-white font-bold">4K</div>` : ''}
+                </div>
+                <div class="p-4">
+                    <div class="font-semibold line-clamp-2 leading-tight mb-3">${video.title}</div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex-shrink-0"></div>
+                        <div class="text-sm">
+                            <div>${video.channel}</div>
+                            <div class="text-zinc-400">${video.views} visualizações • ${video.time}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            card.onclick = () => openVideoModal(video);
+            return card;
+        }
+        
+        function loadVideos() {
+            const grid = document.getElementById('videos-grid');
+            grid.innerHTML = '';
+            videos.forEach(video => {
+                grid.appendChild(createVideoCard(video));
+            });
+        }
+        
+        function openVideoModal(video) {
+            document.getElementById('video-modal').classList.remove('hidden');
+            document.getElementById('modal-video-title').textContent = video.title;
+            
+            // Simulate premium status
+            if (isPremium) {
+                document.getElementById('premium-status').innerHTML = `✅ Premium Ativo • Qualidade 4K`;
+            }
+        }
+        
+        function closeVideoModal() {
+            document.getElementById('video-modal').classList.add('hidden');
+        }
+        
+        function playFakeVideo() {
+            const player = document.getElementById('fake-player');
+            player.innerHTML = `
+                <div class="w-full h-full bg-black flex items-center justify-center text-white text-2xl font-medium">
+                    <div class="text-center">
+                        <p class="mb-8">🎬 Reproduzindo em 4K...</p>
+                        <div class="w-96 h-1 bg-zinc-700 mx-auto rounded-full overflow-hidden">
+                            <div class="h-full w-1/3 bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 animate-[progress_8s_linear_forwards]"></div>
+                        </div>
+                        <p class="text-xs mt-6 text-zinc-400">RoxoTube Premium</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showPremiumModal() {
+            document.getElementById('premium-modal').classList.remove('hidden');
+        }
+        
+        function closePremiumModal() {
+            document.getElementById('premium-modal').classList.add('hidden');
+        }
+        
+        function watchAdForPremium() {
+            closePremiumModal();
+            showToast("Assistindo anúncio... (simulado)", 2500);
+            
+            setTimeout(() => {
+                isPremium = true;
+                premiumTimeLeft = 30;
+                showToast("🎉 Você ganhou 30 minutos de Premium!", 4000);
+                updatePremiumUI();
+            }, 1800);
+        }
+        
+        function subscribeForever() {
+            closePremiumModal();
+            showToast("✅ Pagamento simulado realizado! Premium Vitalício ativado.", 5000);
+            isPremium = true;
+            premiumTimeLeft = 999999;
+            updatePremiumUI();
+        }
+        
+        function updatePremiumUI() {
+            // Just visual feedback
+            const premiumButtons = document.querySelectorAll('.premium-badge');
+            premiumButtons.forEach(btn => {
+                btn.innerHTML = `<i class="fa-solid fa-crown"></i><span>PREMIUM ATIVO</span>`;
+            });
+        }
+        
+        function showUploadModal() {
+            document.getElementById('upload-modal').classList.remove('hidden');
+        }
+        
+        function closeUploadModal() {
+            document.getElementById('upload-modal').classList.add('hidden');
+        }
+        
+        function fakeUpload() {
+            showToast("📤 Vídeo enviado com sucesso! Processando...", 2000);
+        }
+        
+        function publishVideo() {
+            const title = document.getElementById('video-title').value || "Meu Novo Vídeo Roxo";
+            closeUploadModal();
+            
+            showToast(`🎥 Vídeo "${title}" publicado! Agora você pode monetizá-lo.`, 4500);
+            
+            // Add to grid
+            const grid = document.getElementById('videos-grid');
+            const newVideo = {
+                id: Date.now(),
+                title: title,
+                thumbnail: "https://picsum.photos/id/870/320/180",
+                channel: "Você",
+                views: "0",
+                time: "agora",
+                duration: "15:00"
+            };
+            grid.prepend(createVideoCard(newVideo));
+        }
+        
+        function showToast(message, timeout = 3000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerHTML = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, timeout);
+        }
+        
+        function searchVideos() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.video-card');
+            
+            cards.forEach(card => {
+                const title = card.textContent.toLowerCase();
+                card.style.display = title.includes(query) ? '' : 'none';
+            });
+        }
+        
+        function filterCategory(el) {
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active', 'bg-gradient-to-r', 'from-pink-500', 'to-purple-500', 'text-white'));
+            el.classList.add('active', 'bg-gradient-to-r', 'from-pink-500', 'to-purple-500', 'text-white');
+            
+            // Random filter effect
+            showToast(`Mostrando categoria: ${el.textContent}`, 1200);
+        }
+        
+        function toggleUserMenu() {
+            showToast("👋 Olá, Criador Roxo! Bem-vindo de volta.", 2000);
+        }
+        
+        function likeVideo() {
+            showToast("❤️ Curtido! +10 pontos de engajamento", 1500);
+        }
+        
+        function subscribeChannel() {
+            showToast("🔔 Inscrito! Notificações ativadas.", 2000);
+        }
+        
+        function showMonetizationInfo() {
+            showToast("💰 Monetização ativada! Ganhe por visualizações + anúncios", 3500);
+        }
+        
+        function navigateTo(page) {
+            showToast(`Navegando para ${page}...`, 800);
+            // Could expand later
+        }
+        
+        function showMyVideos() {
+            showToast("📚 Mostrando seus vídeos publicados (simulação)", 1500);
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") {
+                const modals = document.querySelectorAll('#video-modal, #premium-modal, #upload-modal');
+                for (let modal of modals) {
+                    if (!modal.classList.contains('hidden')) {
+                        modal.classList.add('hidden');
+                        return;
+                    }
+                }
+            }
+            
+            if (e.key === "/" && document.getElementById('search-input') !== document.activeElement) {
+                e.preventDefault();
+                document.getElementById('search-input').focus();
+            }
+        });
+        
+        // Initialize
+        window.onload = function() {
+            loadVideos();
+            
+            // Demo premium countdown
+            setInterval(() => {
+                if (premiumTimeLeft > 0 && premiumTimeLeft < 999) {
+                    premiumTimeLeft--;
+                }
+            }, 60000);
+            
+            // Easter egg
+            console.log("%cRoxoTube Premium Simulado carregado com sucesso! Tema Rosa & Roxo completo.", "color:#c026d3; font-size:13px");
+            
+            showToast("Bem-vindo ao RoxoTube! 🎨", 2200);
+        };
+    </script>
 </body>
 </html>
