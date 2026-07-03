@@ -1,128 +1,128 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RoséTube - Assista, Publique e Monetize</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Rosytube - Assista, Publique e Monetize</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- HEADER -->
+    <!-- Header -->
     <header class="header">
-        <div class="header-left">
-            <button id="menu-btn" class="menu-btn">☰</button>
-            <div class="logo">
-                <span class="logo-pink">R</span><span class="logo-purple">osé</span><span class="logo-text">Tube</span>
-            </div>
+        <div class="logo">
+            <span class="logo-text">🌸 Rosytube</span>
         </div>
-        
-        <div class="search-bar">
+        <div class="search-container">
             <input type="text" id="search-input" placeholder="Buscar vídeos...">
             <button id="search-btn">🔍</button>
         </div>
-
-        <div class="header-right">
-            <button id="upload-btn" class="header-btn">📤 Publicar</button>
-            <button id="premium-btn" class="header-btn premium-btn">⭐ Premium</button>
-            <div class="user-avatar">👤</div>
+        <div class="header-icons">
+            <button id="upload-btn" class="icon-btn">📤</button>
+            <button id="premium-btn" class="icon-btn">⭐ Premium</button>
+            <button class="icon-btn">🛎️</button>
+            <div class="profile">
+                <img src="https://via.placeholder.com/32" alt="Perfil" class="profile-img">
+            </div>
         </div>
     </header>
 
     <div class="main-container">
-        <!-- SIDEBAR -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <nav>
-                <a href="#" class="sidebar-item active"><span>🏠</span> Início</a>
-                <a href="#" class="sidebar-item"><span>🔥</span> Em Alta</a>
-                <a href="#" class="sidebar-item"><span>📚</span> Inscrições</a>
+                <a href="#" class="nav-item active">🏠 Início</a>
+                <a href="#" class="nav-item">🔥 Em Alta</a>
+                <a href="#" class="nav-item">📺 Inscrições</a>
+                <a href="#" class="nav-item">📚 Biblioteca</a>
+                <a href="#" class="nav-item">❤️ Histórico</a>
                 <hr>
-                <a href="#" class="sidebar-item"><span>🎥</span> Sua Biblioteca</a>
-                <a href="#" class="sidebar-item"><span>🕒</span> Histórico</a>
-                <a href="#" class="sidebar-item"><span>❤️</span> Vídeos Curtidos</a>
+                <a href="#" class="nav-item" id="my-videos">🎥 Meus Vídeos</a>
+                <a href="#" class="nav-item" id="monetization">💰 Monetização</a>
+                <div class="premium-section">
+                    <h3>Premium</h3>
+                    <div id="premium-status" class="premium-status">Grátis • 0 min restantes</div>
+                </div>
             </nav>
         </aside>
 
-        <!-- MAIN CONTENT -->
+        <!-- Main Content -->
         <main class="content">
-            <div class="category-bar">
-                <button class="category-chip active">Todos</button>
-                <button class="category-chip">Música</button>
-                <button class="category-chip">Games</button>
-                <button class="category-chip">Vlogs</button>
-                <button class="category-chip">Tech</button>
-                <button class="category-chip">Comédia</button>
+            <div class="categories">
+                <button class="category-btn active">Todos</button>
+                <button class="category-btn">Música</button>
+                <button class="category-btn">Jogos</button>
+                <button class="category-btn">Vlogs</button>
+                <button class="category-btn">Tech</button>
             </div>
 
-            <!-- VIDEO GRID -->
             <div class="video-grid" id="video-grid">
-                <!-- Populados via JS -->
+                <!-- Vídeos serão adicionados via JS -->
             </div>
         </main>
     </div>
 
-    <!-- VIDEO PLAYER MODAL -->
-    <div id="video-modal" class="modal hidden">
+    <!-- Video Player Modal -->
+    <div id="video-modal" class="modal">
         <div class="modal-content">
-            <button class="close-modal">✕</button>
-            <div class="video-player">
-                <video id="main-video" controls>
+            <button class="close-modal" id="close-player">✕</button>
+            <div class="player-container">
+                <video id="main-player" controls width="100%" height="auto">
                     <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
                 </video>
                 <div class="video-info">
-                    <h2 id="modal-title">Título do Vídeo</h2>
-                    <p id="modal-channel">Canal • 1M visualizações</p>
-                    <div class="quality-options">
-                        <button class="quality-btn" data-quality="1080">1080p</button>
-                        <button class="quality-btn premium-quality" data-quality="4k">4K <span class="premium-badge">PREMIUM</span></button>
+                    <h2 id="video-title">Título do Vídeo</h2>
+                    <div class="video-meta">
+                        <span id="video-channel">Canal Exemplo</span>
+                        <button id="like-btn">👍 12K</button>
                     </div>
+                    <p id="video-desc">Descrição do vídeo...</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- UPLOAD MODAL -->
-    <div id="upload-modal" class="modal hidden">
-        <div class="modal-content upload-modal">
-            <h2>Publicar Vídeo</h2>
-            <input type="text" id="upload-title" placeholder="Título do vídeo" class="upload-input">
-            <textarea id="upload-desc" placeholder="Descrição"></textarea>
-            <input type="file" id="video-file" accept="video/*">
-            <button id="publish-btn">Publicar Agora</button>
-            <button class="close-modal">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- PREMIUM MODAL -->
-    <div id="premium-modal" class="modal hidden">
+    <!-- Premium Modal -->
+    <div id="premium-modal" class="modal">
         <div class="modal-content premium-modal">
-            <div class="premium-header">
-                <h1>⭐ RoséTube Premium</h1>
-                <p class="premium-subtitle">Desbloqueie 4K, sem anúncios e mais</p>
-            </div>
+            <button class="close-modal" id="close-premium">✕</button>
+            <h2>🌟 Rosytube Premium</h2>
+            <p class="premium-subtitle">Desbloqueie 4K, sem anúncios e mais!</p>
             
             <div class="premium-options">
-                <div class="premium-card" id="ad-premium">
-                    <h3>30 Minutos Grátis</h3>
-                    <p>Assista um anúncio e ganhe 30 minutos de Premium</p>
-                    <button id="watch-ad-btn">Ver Anúncio (30 min)</button>
+                <div class="option-card" id="ad-option">
+                    <h3>Assistir Anúncio</h3>
+                    <p>Ganhe <strong>30 minutos</strong> de Premium</p>
+                    <button class="btn-primary">Ver Anúncio (30s)</button>
                 </div>
-                
-                <div class="premium-card premium-card-highlight">
-                    <h3>Premium Vitalício</h3>
-                    <p class="price">R$ 5,99<span>/única vez</span></p>
-                    <button id="buy-premium-btn">Comprar Agora</button>
+                <div class="option-card">
+                    <h3>Premium Ilimitado</h3>
+                    <p><strong>R$ 5,99</strong> / para sempre</p>
+                    <button class="btn-primary" id="pay-btn">Assinar Agora</button>
                 </div>
             </div>
             
-            <div class="current-status" id="premium-status">
-                Status: <span class="free">Grátis</span>
+            <div id="premium-result" class="premium-result hidden">
+                <h3>🎉 Parabéns!</h3>
+                <p id="premium-msg"></p>
             </div>
-            
-            <button class="close-modal">Fechar</button>
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <script src="premium.js"></script>
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="modal">
+        <div class="modal-content upload-modal">
+            <button class="close-modal" id="close-upload">✕</button>
+            <h2>📤 Publicar Vídeo</h2>
+            <form id="upload-form">
+                <input type="text" id="video-title-input" placeholder="Título do vídeo" required>
+                <textarea id="video-desc-input" placeholder="Descrição"></textarea>
+                <input type="file" id="video-file" accept="video/*" required>
+                <button type="submit" class="btn-primary">Publicar Vídeo</button>
+            </form>
+            <div id="upload-status" class="hidden">Publicando... (Simulação)</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
